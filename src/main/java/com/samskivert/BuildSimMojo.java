@@ -5,30 +5,12 @@
 package com.samskivert;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import org.codehaus.plexus.util.Expand;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.resolver.ArtifactResolver;
-import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
 
 /**
  * Goal which builds and runs the project on the iOS simulator.
@@ -37,20 +19,8 @@ import org.apache.maven.project.MavenProject;
  * @goal deploy-sim
  * @phase integration-test
  */
-public class BuildSimMojo extends AbstractMojo
+public class BuildSimMojo extends MonoTouchMojo
 {
-    /**
-     * Location of {@code mdtool} binary.
-     * @parameter expression="${mdtool.path}" default-value="/Applications/MonoDevelop.app/Contents/MacOS/mdtool"
-     */
-    public File mdtoolPath;
-
-    /**
-     * Location of {@code mtouch} binary.
-     * @parameter expression="${mtouch.path}" default-value="/Developer/MonoTouch/usr/bin/mtouch"
-     */
-    public File mtouchPath;
-
     /**
      * Location of {@code ios-sim} binary. If this is set, it will be used to launch the simulator
      * in place of {@code mtouch}. {@code ios-sim} sends logs to stdout and {@code mtouch} does
@@ -64,20 +34,6 @@ public class BuildSimMojo extends AbstractMojo
      * @parameter expression="${simulator.build}" default-value="Debug"
      */
     public String build;
-
-    /**
-     * The path to the project's {@code sln} file. For example {@code foo.sln} (for a solution that
-     * is in the top-level project directory).
-     * @parameter expression="${solution}"
-     */
-    public File solution;
-
-    /**
-     * The name of the directory that contains your built app, for example: {@code foo.app}. This
-     * defaults to {@link #solution} with {@code sln} switched to {@code app}, but if your app is
-     * special, you can override it.
-     */
-    public String appName;
 
     /**
      * Which device family to use (iphone or ipad).
@@ -102,10 +58,16 @@ public class BuildSimMojo extends AbstractMojo
     public void execute () throws MojoExecutionException {
         requireParameter("solution", solution);
 
+        // this is ahack, but if "integration-test" wasn't explicitly passed as a top-level goal,
+        // then NOOP; this is because "integration-test" is run "on the way" to "install" and when
+        // we're installing, we just want the BuildDeviceMojo to run, not the BuildSimMojo; we only
+        // want to run BuildSimMojo if we're only going up to integration-test and then stopping
+        if (!haveExplicitGoal("integration-test")) return;
+
         // create the command line for building the app
         Commandline bcmd = new Commandline(mdtoolPath.getPath());
         bcmd.createArgument().setValue("build");
-        bcmd.createArgument().setValue("-c:\"" + build + "|" + DEVICE + "\"");
+        bcmd.createArgument().setValue("-c:" + build + "|" + DEVICE);
         bcmd.createArgument().setValue(solution.getPath());
 
         // log our full build command for great debuggery
@@ -153,34 +115,15 @@ public class BuildSimMojo extends AbstractMojo
         }
     }
 
-    private void requireParameter (String name, Object ref) throws MojoExecutionException {
-        if (ref == null) throw new MojoExecutionException("Missing required parameter: " + name);
-    }
-
-    private void invoke (String command, Commandline cli) throws MojoExecutionException {
-        invoke(command, cli, new StreamConsumer() {
-            public void consumeLine (String line) {
-                getLog().info(line);
-            }
-        }, new StreamConsumer() {
-            public void consumeLine (String line) {
-                getLog().warn(line);
-            }
-        });
-    }
-
-    private void invoke (String command, Commandline cli, StreamConsumer stdout,
-                         StreamConsumer stderr) throws MojoExecutionException {
-        try {
-            int rv = CommandLineUtils.executeCommandLine(cli, null, stdout, stderr);
-            if (rv != 0) throw new MojoExecutionException(command + " failed; see above output.");
-        } catch (CommandLineException clie) {
-            throw new MojoExecutionException(command + " execution failed", clie);
+    protected boolean haveExplicitGoal (String goal) {
+        for (Object sessGoal : _session.getGoals()) {
+            if (goal.equals(sessGoal)) return true;
         }
+        return false;
     }
 
-    /** @parameter default-value="${project}" */
-    private MavenProject _project;
+    /** @parameter default-value="${session}" */
+    protected MavenSession _session;
 
     protected static final String DEVICE = "iPhoneSimulator";
 }
