@@ -33,7 +33,16 @@ public class BuildDeviceMojo extends MonoTouchMojo
     public String build;
 
     /**
-     * Indicates whether the app should be launched after it is installed.
+     * Indicates whether the app should be installed after the IPA is built. This defaults to true,
+     * but this configuration exists to allow you to disable this behavior for things like
+     * automated builds.
+     * @parameter expression="${device.install}" default-value="true"
+     */
+    public boolean install;
+
+    /**
+     * Indicates whether the app should be launched after it is installed. This is only used if
+     * {@link #install} is true. If {@link #install} is false, this is implicitly false as well.
      * @parameter expression="${device.launch}" default-value="true"
      */
     public boolean launch;
@@ -62,14 +71,16 @@ public class BuildDeviceMojo extends MonoTouchMojo
         if (appName == null) appName = solution.getName().replaceAll(".sln$", ".app");
         File appDir = new File(buildDir, appName);
 
-        // next invoke mtouch to install it to the device
-        Commandline dcmd = new Commandline(mtouchPath.getPath());
-        dcmd.createArgument().setValue("--installdev=" + appDir.getAbsolutePath());
-        getLog().debug("MTOUCH: " + dcmd);
-        invoke("mtouch", dcmd);
+        // install it to the device, if desired
+        if (install) {
+            Commandline dcmd = new Commandline(mtouchPath.getPath());
+            dcmd.createArgument().setValue("--installdev=" + appDir.getAbsolutePath());
+            getLog().debug("MTOUCH: " + dcmd);
+            invoke("mtouch", dcmd);
+        }
 
-        // launch it on the device if desired
-        if (launch) {
+        // launch it on the device, if desired
+        if (install && launch) {
             // read in the .xcent file to obtain the app id
             File xcent = new File(buildDir, appName.replaceAll(".app$", ".xcent"));
             Map<String,String> info = parsePlist(xcent);
