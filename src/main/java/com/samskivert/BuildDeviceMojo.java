@@ -51,7 +51,7 @@ public class BuildDeviceMojo extends MonoTouchMojo
         requireParameter("solution", solution);
 
         // create the command line for building the app
-        Commandline bcmd = new Commandline(mdtoolPath.getPath());
+        Commandline bcmd = newCommandline(mdtoolPath.getPath());
         bcmd.createArgument().setValue("build");
         bcmd.createArgument().setValue("-c:" + build + "|" + DEVICE);
         bcmd.createArgument().setValue(solution.getPath());
@@ -73,7 +73,7 @@ public class BuildDeviceMojo extends MonoTouchMojo
 
         // install it to the device, if desired
         if (install) {
-            Commandline dcmd = new Commandline(mtouchPath.getPath());
+            Commandline dcmd = newCommandline(mtouchPath.getPath());
             dcmd.createArgument().setValue("--installdev=" + appDir.getAbsolutePath());
             getLog().debug("MTOUCH: " + dcmd);
             invoke("mtouch", dcmd);
@@ -91,7 +91,7 @@ public class BuildDeviceMojo extends MonoTouchMojo
             appId = appId.replaceAll("^[A-Z0-9]+\\.", "");
 
             // and run mtouch to launch the app
-            Commandline lcmd = new Commandline(mtouchPath.getPath());
+            Commandline lcmd = newCommandline(mtouchPath.getPath());
             lcmd.createArgument().setValue("--launchdev=" + appId);
             getLog().debug("MTOUCH: " + lcmd);
             invoke("mtouch", lcmd);

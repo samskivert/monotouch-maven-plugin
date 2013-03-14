@@ -65,7 +65,7 @@ public class BuildSimMojo extends MonoTouchMojo
         if (!haveExplicitGoal("integration-test")) return;
 
         // create the command line for building the app
-        Commandline bcmd = new Commandline(mdtoolPath.getPath());
+        Commandline bcmd = newCommandline(mdtoolPath.getPath());
         bcmd.createArgument().setValue("build");
         bcmd.createArgument().setValue("-c:" + build + "|" + DEVICE);
         bcmd.createArgument().setValue(solution.getPath());
@@ -84,7 +84,7 @@ public class BuildSimMojo extends MonoTouchMojo
 
         // next invoke ios-sim or mdtouch to launch the simulator
         if (iossimPath != null) {
-            Commandline dcmd = new Commandline(iossimPath.getPath());
+            Commandline dcmd = newCommandline(iossimPath.getPath());
             dcmd.createArgument().setValue("launch");
             dcmd.createArgument().setValue(appDir.getAbsolutePath());
             dcmd.createArgument().setValue("--family");
@@ -104,7 +104,7 @@ public class BuildSimMojo extends MonoTouchMojo
             });
 
         } else {
-            Commandline dcmd = new Commandline(mtouchPath.getPath());
+            Commandline dcmd = newCommandline(mtouchPath.getPath());
             dcmd.createArgument().setValue("--launchsim=" + appDir.getAbsolutePath());
             dcmd.createArgument().setValue("--device=" + family);
             // TODO: how to support?

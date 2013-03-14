@@ -6,6 +6,7 @@ package com.samskivert;
 
 import java.io.File;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
@@ -22,7 +23,7 @@ public abstract class MonoTouchMojo extends AbstractMojo
 {
     /**
      * Location of {@code mdtool} binary.
-     * @parameter expression="${mdtool.path}" default-value="/Applications/MonoDevelop.app/Contents/MacOS/mdtool"
+     * @parameter expression="${mdtool.path}" default-value="/Applications/Xamarin Studio.app/Contents/MacOS/mdtool"
      */
     public File mdtoolPath;
 
@@ -45,6 +46,10 @@ public abstract class MonoTouchMojo extends AbstractMojo
      * special, you can override it.
      */
     public String appName;
+
+    protected Commandline newCommandline (String exe) {
+        return new Commandline(StringUtils.quoteAndEscape(exe, '"'));
+    }
 
     protected void requireParameter (String name, Object ref) throws MojoExecutionException {
         if (ref == null) throw new MojoExecutionException("Missing required parameter: " + name);
