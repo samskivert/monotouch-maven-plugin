@@ -16,35 +16,37 @@ import java.util.regex.Pattern;
 import org.codehaus.plexus.util.cli.Commandline;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
  * Goal which builds and installs the project on an iOS device.
- *
- * @requiresDependencyResolution package
- * @goal deploy-device
- * @phase install
  */
+@Mojo(name="deploy-device", defaultPhase=LifecyclePhase.INSTALL,
+    requiresDependencyResolution=ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class BuildDeviceMojo extends MonoTouchMojo
 {
     /**
      * The the build profile to use when building for the device.
-     * @parameter expression="${device.build}" default-value="Release"
      */
+    @Parameter(property="device.build", defaultValue="Release")
     public String build;
 
     /**
      * Indicates whether the app should be installed after the IPA is built. This defaults to true,
      * but this configuration exists to allow you to disable this behavior for things like
      * automated builds.
-     * @parameter expression="${device.install}" default-value="true"
      */
+    @Parameter(property="device.install", defaultValue="true")
     public boolean install;
 
     /**
      * Indicates whether the app should be launched after it is installed. This is only used if
      * {@link #install} is true. If {@link #install} is false, this is implicitly false as well.
-     * @parameter expression="${device.launch}" default-value="true"
      */
+    @Parameter(property="device.launch", defaultValue="true")
     public boolean launch;
 
     public void execute () throws MojoExecutionException {

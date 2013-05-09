@@ -11,48 +11,50 @@ import org.codehaus.plexus.util.cli.StreamConsumer;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
  * Goal which builds and runs the project on the iOS simulator.
- *
- * @requiresDependencyResolution package
- * @goal deploy-sim
- * @phase integration-test
  */
+@Mojo(name="deploy-sim", defaultPhase=LifecyclePhase.INTEGRATION_TEST,
+    requiresDependencyResolution=ResolutionScope.TEST)
 public class BuildSimMojo extends MonoTouchMojo
 {
     /**
      * Location of {@code ios-sim} binary. If this is set, it will be used to launch the simulator
      * in place of {@code mtouch}. {@code ios-sim} sends logs to stdout and {@code mtouch} does
      * not, so it is recommended to use it.
-     * @parameter expression="${iossim.path}"
      */
+    @Parameter(property="iossim.path")
     public File iossimPath;
 
     /**
      * The the build profile to use when building for the simulator.
-     * @parameter expression="${simulator.build}" default-value="Debug"
      */
+    @Parameter(defaultValue="Debug", property="simulator.build")
     public String build;
 
     /**
      * Which device family to use (iphone or ipad).
-     * @parameter expression="${simulator.family}" default-value="iphone"
      */
+    @Parameter(defaultValue="iphone", property="simulator.family")
     public String family;
 
     /**
      * Whether to use the Retina or non-Retina simulator. Currently only supported when using
      * {@code ios-sim}.
-     * @parameter expression="${simulator.retina}" default-value="true"
      */
+    @Parameter(property="simulator.retina", defaultValue="true")
     public boolean retina;
 
     /**
      * Whether to use the tall (iPhone 5) or normal (iPhone 4, etc.) simulator mode. Currently only
      * supported when using {@code ios-sim}.
-     * @parameter expression="${simulator.tall}" default-value="true"
      */
+    @Parameter(property="simulator.tall", defaultValue="true")
     public boolean tall;
 
     public void execute () throws MojoExecutionException {
@@ -122,7 +124,7 @@ public class BuildSimMojo extends MonoTouchMojo
         return false;
     }
 
-    /** @parameter default-value="${session}" */
+    @Parameter(defaultValue="${session}")
     protected MavenSession _session;
 
     protected static final String DEVICE = "iPhoneSimulator";

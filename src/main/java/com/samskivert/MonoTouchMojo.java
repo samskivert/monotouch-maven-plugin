@@ -14,6 +14,7 @@ import org.codehaus.plexus.util.cli.StreamConsumer;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -23,21 +24,22 @@ public abstract class MonoTouchMojo extends AbstractMojo
 {
     /**
      * Location of {@code mdtool} binary.
-     * @parameter expression="${mdtool.path}" default-value="/Applications/Xamarin Studio.app/Contents/MacOS/mdtool"
      */
+    @Parameter(defaultValue="/Applications/Xamarin Studio.app/Contents/MacOS/mdtool",
+            property="mdtool.path")
     public File mdtoolPath;
 
     /**
      * Location of {@code mtouch} binary.
-     * @parameter expression="${mtouch.path}" default-value="/Developer/MonoTouch/usr/bin/mtouch"
      */
+    @Parameter(defaultValue="/Developer/MonoTouch/usr/bin/mtouch", property="mtouch.path")
     public File mtouchPath;
 
     /**
      * The path to the project's {@code sln} file. For example {@code foo.sln} (for a solution that
      * is in the top-level project directory).
-     * @parameter expression="${solution}"
      */
+    @Parameter(property="solution")
     public File solution;
 
     /**
@@ -45,6 +47,7 @@ public abstract class MonoTouchMojo extends AbstractMojo
      * defaults to {@link #solution} with {@code sln} switched to {@code app}, but if your app is
      * special, you can override it.
      */
+    @Parameter()
     public String appName;
 
     protected Commandline newCommandline (String exe) {
@@ -77,6 +80,6 @@ public abstract class MonoTouchMojo extends AbstractMojo
         }
     }
 
-    /** @parameter default-value="${project}" */
+    @Parameter(defaultValue="${project}")
     protected MavenProject _project;
 }
