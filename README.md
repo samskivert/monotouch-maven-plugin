@@ -65,6 +65,13 @@ binary in `<configuration>`:
       <iossimPath>/usr/local/bin/ios-sim</iossimPath>
     </configuration>
 
+## Advanced Usage
+
+It's also possible to use this plugin to compile and package ios bindings. Said package can then
+be included in other ikvm projects. The configruation is similar to the other goals. The solution
+or csproj file is required input. When adding the plugin to a bindings build, it is required to add
+`<extensions>true</extensions>` in the body of the `<plugin>` tag.
+
 ## License
 
 monotouch-maven-plugin is released under the New BSD License, which can be found in the [LICENSE]
