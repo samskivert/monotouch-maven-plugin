@@ -57,17 +57,7 @@ public class BuildSimMojo extends MonoTouchMojo
     public boolean tall;
 
     public void execute () throws MojoExecutionException {
-        // create the command line for building the app
-        Commandline bcmd = newCommandline(mdtoolPath.getPath());
-        bcmd.createArgument().setValue("build");
-        bcmd.createArgument().setValue("-c:" + build + "|" + DEVICE);
-        bcmd.createArgument().setValue(solution.getPath());
-
-        // log our full build command for great debuggery
-        getLog().debug("BUILD: " + bcmd);
-
-        // now invoke the build process
-        invoke("mdtool", bcmd);
+        build(build, DEVICE);
 
         // determine the name and path to our app directory
         String appName = resolveAppName();

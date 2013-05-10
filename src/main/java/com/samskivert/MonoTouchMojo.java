@@ -54,6 +54,20 @@ public abstract class MonoTouchMojo extends AbstractMojo
         return new Commandline(StringUtils.quoteAndEscape(exe, '"'));
     }
 
+    protected void build (String build, String device) throws MojoExecutionException {
+        // create the command line for building the app
+        Commandline bcmd = newCommandline(mdtoolPath.getPath());
+        bcmd.createArgument().setValue("build");
+        bcmd.createArgument().setValue("-c:" + build + "|" + device);
+        bcmd.createArgument().setValue(solution.getPath());
+
+        // log our full build command for great debuggery
+        getLog().debug("BUILD: " + bcmd);
+
+        // now invoke the build process
+        invoke("mdtool", bcmd);
+    }
+
     protected void invoke (String command, Commandline cli) throws MojoExecutionException {
         invoke(command, cli, new StreamConsumer() {
             public void consumeLine (String line) {

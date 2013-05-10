@@ -6,7 +6,7 @@ nothing particularly PlayN-specific about it.
 
 ## Usage
 
-The plugin provides two goals, one to build and deploy to the simulator and one to build and
+The plugin provides two main goals, one to build and deploy to the simulator and one to build and
 deploy to a device. The only required configuration for the plugin is the solution (or csproj).
 Adding this in your <build><plugins> section:
 
