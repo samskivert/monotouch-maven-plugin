@@ -8,7 +8,7 @@ nothing particularly PlayN-specific about it.
 
 The plugin provides two main goals, one to build and deploy to the simulator and one to build and
 deploy to a device. The only required configuration for the plugin is the solution (or csproj).
-Adding this in your <build><plugins> section:
+Adding this in your `<build><plugins>` section:
 
     <plugin>
       <groupId>com.samskivert</groupId>
