@@ -47,7 +47,7 @@ public abstract class MonoTouchMojo extends AbstractMojo
      * defaults to {@link #solution} with {@code sln} switched to {@code app}, but if your app is
      * special, you can override it.
      */
-    @Parameter()
+    @Parameter(property="appName")
     public String appName;
 
     protected Commandline newCommandline (String exe) {
