@@ -36,10 +36,10 @@ public abstract class MonoTouchMojo extends AbstractMojo
     public File mtouchPath;
 
     /**
-     * The path to the project's {@code sln} file. For example {@code foo.sln} (for a solution that
-     * is in the top-level project directory).
+     * The path to the project's {@code sln} or {@code csproj}. For example {@code foo.sln}
+     * (for a solution that is in the top-level project directory).
      */
-    @Parameter(property="solution")
+    @Parameter(property="solution", alias="csproj")
     public File solution;
 
     /**
@@ -78,6 +78,11 @@ public abstract class MonoTouchMojo extends AbstractMojo
         } catch (CommandLineException clie) {
             throw new MojoExecutionException(command + " execution failed", clie);
         }
+    }
+
+    protected String resolveAppName () {
+        return appName != null ? appName :
+            solution.getName().replaceAll(".sln$", ".app").replaceAll(".csproj$", ".app");
     }
 
     @Parameter(defaultValue="${project}")

@@ -79,8 +79,7 @@ public class BuildSimMojo extends MonoTouchMojo
         invoke("mdtool", bcmd);
 
         // determine the name and path to our app directory
-        String appName = this.appName;
-        if (appName == null) appName = solution.getName().replaceAll(".sln$", ".app");
+        String appName = resolveAppName();
         File appDir = new File(_project.getBuild().getDirectory() + File.separator + DEVICE +
                                File.separator + build + File.separator + appName);
 

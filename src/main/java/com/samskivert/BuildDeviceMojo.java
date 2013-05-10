@@ -69,8 +69,7 @@ public class BuildDeviceMojo extends MonoTouchMojo
                                  File.separator + DEVICE + File.separator + build);
 
         // determine the name and path to our app directory
-        String appName = this.appName;
-        if (appName == null) appName = solution.getName().replaceAll(".sln$", ".app");
+        String appName = resolveAppName();
         File appDir = new File(buildDir, appName);
 
         // install it to the device, if desired
