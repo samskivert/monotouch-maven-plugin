@@ -47,7 +47,7 @@ public class DeployDeviceMojo extends BuildDeviceMojo
 
         // install it to the device, if desired
         Commandline dcmd = newCommandline(mtouchPath.getPath());
-        dcmd.createArgument().setValue("--installdev=" + appDir.getAbsolutePath());
+        dcmd.createArg().setValue("--installdev=" + appDir.getAbsolutePath());
         getLog().debug("MTOUCH: " + dcmd);
         invoke("mtouch", dcmd);
 
@@ -64,7 +64,7 @@ public class DeployDeviceMojo extends BuildDeviceMojo
 
             // and run mtouch to launch the app
             Commandline lcmd = newCommandline(mtouchPath.getPath());
-            lcmd.createArgument().setValue("--launchdev=" + appId);
+            lcmd.createArg().setValue("--launchdev=" + appId);
             getLog().debug("MTOUCH: " + lcmd);
             invoke("mtouch", lcmd);
         }

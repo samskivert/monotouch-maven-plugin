@@ -67,12 +67,12 @@ public class BuildSimMojo extends MonoTouchMojo
         // next invoke ios-sim or mdtouch to launch the simulator
         if (iossimPath != null) {
             Commandline dcmd = newCommandline(iossimPath.getPath());
-            dcmd.createArgument().setValue("launch");
-            dcmd.createArgument().setValue(appDir.getAbsolutePath());
-            dcmd.createArgument().setValue("--family");
-            dcmd.createArgument().setValue(family);
-            if (retina) dcmd.createArgument().setValue("--retina");
-            if (tall) dcmd.createArgument().setValue("--tall");
+            dcmd.createArg().setValue("launch");
+            dcmd.createArg().setValue(appDir.getAbsolutePath());
+            dcmd.createArg().setValue("--family");
+            dcmd.createArg().setValue(family);
+            if (retina) dcmd.createArg().setValue("--retina");
+            if (tall) dcmd.createArg().setValue("--tall");
             getLog().debug("IOSSIM: " + dcmd);
             // the ios-sim output is wonky, so we clean it up here
             invoke("iossim", dcmd, new StreamConsumer() {
@@ -87,8 +87,8 @@ public class BuildSimMojo extends MonoTouchMojo
 
         } else {
             Commandline dcmd = newCommandline(mtouchPath.getPath());
-            dcmd.createArgument().setValue("--launchsim=" + appDir.getAbsolutePath());
-            dcmd.createArgument().setValue("--device=" + family);
+            dcmd.createArg().setValue("--launchsim=" + appDir.getAbsolutePath());
+            dcmd.createArg().setValue("--device=" + family);
             // TODO: how to support?
             // if (retina) dcmd.createArgument().setValue("--retina");
             // if (tall) dcmd.createArgument().setValue("--tall");

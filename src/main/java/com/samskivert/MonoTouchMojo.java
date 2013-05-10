@@ -57,9 +57,9 @@ public abstract class MonoTouchMojo extends AbstractMojo
     protected void build (String build, String device) throws MojoExecutionException {
         // create the command line for building the app
         Commandline bcmd = newCommandline(mdtoolPath.getPath());
-        bcmd.createArgument().setValue("build");
-        bcmd.createArgument().setValue("-c:" + build + "|" + device);
-        bcmd.createArgument().setValue(solution.getPath());
+        bcmd.createArg().setValue("build");
+        bcmd.createArg().setValue("-c:" + build + "|" + device);
+        bcmd.createArg().setValue(solution.getPath());
 
         // log our full build command for great debuggery
         getLog().debug("BUILD: " + bcmd);
