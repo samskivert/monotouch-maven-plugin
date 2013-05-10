@@ -9,7 +9,6 @@ import java.io.File;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
 
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -19,7 +18,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 /**
  * Goal which builds and runs the project on the iOS simulator.
  */
-@Mojo(name="deploy-sim", defaultPhase=LifecyclePhase.INTEGRATION_TEST,
+@Mojo(name="deploy-sim", defaultPhase=LifecyclePhase.NONE,
     requiresDependencyResolution=ResolutionScope.TEST)
 public class BuildSimMojo extends MonoTouchMojo
 {
@@ -58,12 +57,6 @@ public class BuildSimMojo extends MonoTouchMojo
     public boolean tall;
 
     public void execute () throws MojoExecutionException {
-        // this is ahack, but if "integration-test" wasn't explicitly passed as a top-level goal,
-        // then NOOP; this is because "integration-test" is run "on the way" to "install" and when
-        // we're installing, we just want the BuildDeviceMojo to run, not the BuildSimMojo; we only
-        // want to run BuildSimMojo if we're only going up to integration-test and then stopping
-        if (!haveExplicitGoal("integration-test")) return;
-
         // create the command line for building the app
         Commandline bcmd = newCommandline(mdtoolPath.getPath());
         bcmd.createArgument().setValue("build");
@@ -113,16 +106,6 @@ public class BuildSimMojo extends MonoTouchMojo
             invoke("mtouch", dcmd);
         }
     }
-
-    protected boolean haveExplicitGoal (String goal) {
-        for (Object sessGoal : _session.getGoals()) {
-            if (goal.equals(sessGoal)) return true;
-        }
-        return false;
-    }
-
-    @Parameter(defaultValue="${session}")
-    protected MavenSession _session;
 
     protected static final String DEVICE = "iPhoneSimulator";
 }
