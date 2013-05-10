@@ -50,8 +50,6 @@ public class BuildDeviceMojo extends MonoTouchMojo
     public boolean launch;
 
     public void execute () throws MojoExecutionException {
-        requireParameter("solution", solution);
-
         // create the command line for building the app
         Commandline bcmd = newCommandline(mdtoolPath.getPath());
         bcmd.createArgument().setValue("build");

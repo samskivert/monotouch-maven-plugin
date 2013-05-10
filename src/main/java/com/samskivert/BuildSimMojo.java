@@ -58,8 +58,6 @@ public class BuildSimMojo extends MonoTouchMojo
     public boolean tall;
 
     public void execute () throws MojoExecutionException {
-        requireParameter("solution", solution);
-
         // this is ahack, but if "integration-test" wasn't explicitly passed as a top-level goal,
         // then NOOP; this is because "integration-test" is run "on the way" to "install" and when
         // we're installing, we just want the BuildDeviceMojo to run, not the BuildSimMojo; we only

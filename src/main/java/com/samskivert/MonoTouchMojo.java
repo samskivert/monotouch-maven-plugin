@@ -39,7 +39,7 @@ public abstract class MonoTouchMojo extends AbstractMojo
      * The path to the project's {@code sln} or {@code csproj}. For example {@code foo.sln}
      * (for a solution that is in the top-level project directory).
      */
-    @Parameter(property="solution", alias="csproj")
+    @Parameter(property="solution", alias="csproj", required=true)
     public File solution;
 
     /**
@@ -52,10 +52,6 @@ public abstract class MonoTouchMojo extends AbstractMojo
 
     protected Commandline newCommandline (String exe) {
         return new Commandline(StringUtils.quoteAndEscape(exe, '"'));
-    }
-
-    protected void requireParameter (String name, Object ref) throws MojoExecutionException {
-        if (ref == null) throw new MojoExecutionException("Missing required parameter: " + name);
     }
 
     protected void invoke (String command, Commandline cli) throws MojoExecutionException {
