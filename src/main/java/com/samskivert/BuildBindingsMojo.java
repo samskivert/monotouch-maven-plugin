@@ -1,3 +1,7 @@
+//
+// monotouch-maven-plugin - builds and deploys MonoTouch projects
+// http://github.com/samskivert/monotouch-maven-plugin/blob/master/LICENSE
+
 package com.samskivert;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -8,6 +12,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 /**
  * A compile phase which uses {@code mdtool} to compile an ios bindings project. A {@code DLL}
  * file is generated for later consumption by the {@link PackageBindingsMojo}.
+ *
  * <p>IMPORTANT: requires the plugin to be registered as an extension so it can run in place
  * of javac for the compile phase</p>
  */

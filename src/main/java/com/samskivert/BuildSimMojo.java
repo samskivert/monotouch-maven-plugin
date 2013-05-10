@@ -33,13 +33,13 @@ public class BuildSimMojo extends MonoTouchMojo
     /**
      * The the build profile to use when building for the simulator.
      */
-    @Parameter(defaultValue="Debug", property="simulator.build")
+    @Parameter(property="simulator.build", defaultValue="Debug")
     public String build;
 
     /**
      * Which device family to use (iphone or ipad).
      */
-    @Parameter(defaultValue="iphone", property="simulator.family")
+    @Parameter(property="simulator.family", defaultValue="iphone")
     public String family;
 
     /**

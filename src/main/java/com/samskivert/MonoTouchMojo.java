@@ -91,8 +91,12 @@ public abstract class MonoTouchMojo extends AbstractMojo
     }
 
     protected String resolveAppName () {
-        return appName != null ? appName :
-            solution.getName().replaceAll(".sln$", ".app").replaceAll(".csproj$", ".app");
+        return resolveName(appName, ".app");
+    }
+
+    protected String resolveName (String prefName, String suff) {
+        return prefName != null ? prefName :
+            solution.getName().replaceAll(".sln$", suff).replaceAll(".csproj$", suff);
     }
 
     @Parameter(defaultValue="${project}")
