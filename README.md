@@ -13,7 +13,7 @@ Adding this in your `<build><plugins>` section:
     <plugin>
       <groupId>com.samskivert</groupId>
       <artifactId>monotouch-maven-plugin</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
       <configuration>
         <solution>YOUR.sln</solution>
       </configuration>
