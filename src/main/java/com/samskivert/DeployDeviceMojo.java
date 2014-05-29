@@ -34,16 +34,25 @@ public class DeployDeviceMojo extends BuildDeviceMojo
     @Parameter(property="device.launch", defaultValue="true")
     public boolean launch;
 
+    /**
+     * Indicates where the build is output. By default, this is calculated using the provided
+     * {@link #solution} and {@link #build}. E.g. {@code bin/iPhone/Debug}.
+     */
+    @Parameter(property="mtouch.output.dir")
+    public File outputDir;
+
     public void execute () throws MojoExecutionException {
         super.execute();
 
-        // make a note of the mdtool build output directory
-        File buildDir = new File(_project.getBuild().getDirectory() +
-                                 File.separator + DEVICE + File.separator + build);
+        if (outputDir == null) {
+            // this is where mtouch normally places binaries
+            outputDir = new File(solution.getParent() + File.separator + "bin" +
+                File.separator + DEVICE + File.separator + build);
+        }
 
         // determine the name and path to our app directory
         String appName = resolveAppName();
-        File appDir = new File(buildDir, appName);
+        File appDir = new File(outputDir, appName);
 
         // install it to the device, if desired
         Commandline dcmd = newCommandline(mtouchPath.getPath());
@@ -54,7 +63,7 @@ public class DeployDeviceMojo extends BuildDeviceMojo
         // launch it on the device, if desired
         if (launch) {
             // read in the .xcent file to obtain the app id
-            File xcent = new File(buildDir, appName.replaceAll(".app$", ".xcent"));
+            File xcent = new File(outputDir, appName.replaceAll(".app$", ".xcent"));
             Map<String,String> info = parsePlist(xcent);
             String appId = info.get("application-identifier");
             if (appId == null) throw new MojoExecutionException(
